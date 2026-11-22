@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LexiNote - Smart Vocabulary</title>
-<meta name="description" content="LexiNote - Nền tảng học từ vựng tiếng Anh thông minh với flashcards, listening, speaking và kiểm tra từ vựng.">
+<meta name="description" content="LexiNote - Học từ vựng tiếng Anh thông minh với Flashcards, Listening, Speaking và kiểm tra từ vựng.">
 <meta name="theme-color" content="#dff3ff">
 
 <style>
@@ -17,7 +17,6 @@
   --blue-soft: #c8e8ff;
   --text: #173c5b;
   --muted: #64839c;
-  --white: #ffffff;
   --green: #16875d;
   --red: #d65353;
   --shadow: 0 8px 25px rgba(27, 103, 157, .10);
@@ -33,14 +32,10 @@ body {
   min-height: 100vh;
 }
 
-button, input, select, textarea {
-  font: inherit;
-}
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; border: none; }
 
-button {
-  cursor: pointer;
-  border: none;
-}
+/* ===== OCEAN WAVES ===== */
 
 .ocean {
   position: fixed;
@@ -48,34 +43,56 @@ button {
   overflow: hidden;
   z-index: -1;
   pointer-events: none;
+  background: linear-gradient(180deg, #e8f8ff 0%, #ccecff 65%, #b6e3fa 100%);
 }
 
 .wave {
   position: absolute;
-  width: 200%;
-  height: 250px;
   left: -50%;
-  border-radius: 45%;
-  background: rgba(255,255,255,.22);
-  animation: wave 15s infinite linear;
+  width: 200%;
+  height: 220px;
+  bottom: -100px;
+  border-radius: 43%;
+  background: rgba(255,255,255,.45);
+  animation: waveMove 9s infinite linear;
 }
 
-.wave.one { bottom: -120px; }
+.wave.one {
+  bottom: -115px;
+  opacity: .8;
+  animation-duration: 11s;
+}
+
 .wave.two {
-  bottom: -145px;
-  animation-duration: 20s;
-  opacity: .7;
-}
-.wave.three {
-  bottom: -165px;
-  animation-duration: 25s;
-  opacity: .5;
+  bottom: -135px;
+  background: rgba(91,180,230,.22);
+  animation-duration: 15s;
+  animation-direction: reverse;
 }
 
-@keyframes wave {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.wave.three {
+  bottom: -155px;
+  background: rgba(255,255,255,.38);
+  animation-duration: 19s;
 }
+
+.wave-four {
+  position: absolute;
+  width: 200%;
+  height: 180px;
+  left: -50%;
+  bottom: -120px;
+  border-radius: 45%;
+  background: rgba(66,164,218,.13);
+  animation: waveMove 23s infinite linear;
+}
+
+@keyframes waveMove {
+  from { transform: rotate(0deg) translateX(0); }
+  to { transform: rotate(360deg) translateX(0); }
+}
+
+/* ===== MAIN LAYOUT ===== */
 
 .app {
   display: flex;
@@ -86,7 +103,7 @@ button {
 .sidebar {
   width: 245px;
   padding: 25px 17px;
-  background: rgba(239,250,255,.82);
+  background: rgba(239,250,255,.86);
   border-right: 1px solid rgba(255,255,255,.8);
   backdrop-filter: blur(12px);
   flex-shrink: 0;
@@ -179,8 +196,8 @@ button {
 .page.active { display: block; }
 
 .card {
-  background: rgba(255,255,255,.82);
-  border: 1px solid rgba(255,255,255,.9);
+  background: rgba(255,255,255,.86);
+  border: 1px solid rgba(255,255,255,.95);
   border-radius: 19px;
   padding: 22px;
   box-shadow: var(--shadow);
@@ -206,7 +223,7 @@ button {
 
 .stat {
   padding: 20px;
-  background: rgba(255,255,255,.78);
+  background: rgba(255,255,255,.82);
   border-radius: 17px;
   box-shadow: var(--shadow);
 }
@@ -218,9 +235,7 @@ button {
   margin: 8px 0;
 }
 
-.stat small {
-  color: var(--muted);
-}
+.stat small { color: var(--muted); }
 
 .btn {
   padding: 11px 17px;
@@ -242,7 +257,6 @@ button {
 }
 
 .btn.secondary:hover { background: #c4e5ff; }
-
 .btn.danger { background: var(--red); }
 
 .btn:disabled {
@@ -255,7 +269,7 @@ button {
   width: 100%;
   padding: 12px 13px;
   border: 1px solid #c6e2f4;
-  background: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.95);
   color: var(--text);
   border-radius: 10px;
   outline: none;
@@ -378,19 +392,9 @@ label {
   text-align: left;
 }
 
-.quiz-option:hover {
-  background: #dcefff;
-}
-
-.quiz-option.correct {
-  background: #e1f7eb;
-  border-color: #75c99a;
-}
-
-.quiz-option.wrong {
-  background: #fff0f0;
-  border-color: #e7a0a0;
-}
+.quiz-option:hover { background: #dcefff; }
+.quiz-option.correct { background: #e1f7eb; border-color: #75c99a; }
+.quiz-option.wrong { background: #fff0f0; border-color: #e7a0a0; }
 
 hr {
   border: 0;
@@ -430,27 +434,32 @@ hr {
 
 @media(max-width: 650px) {
   .app { display: block; }
+
   .sidebar {
     width: 100%;
     padding: 12px;
     border-right: none;
     border-bottom: 1px solid #cce7f7;
   }
+
   .logo { font-size: 21px; margin-bottom: 3px; }
   .logo-sub { margin-bottom: 10px; }
   .nav-title { display: none; }
+
   .nav-list {
     display: flex;
     overflow-x: auto;
     gap: 5px;
     padding-bottom: 3px;
   }
+
   .nav-btn {
     width: auto;
     white-space: nowrap;
     padding: 10px 12px;
     font-size: 12px;
   }
+
   .main { padding: 20px 13px 35px; }
   .topbar h1 { font-size: 21px; }
   .profile { display: none; }
@@ -468,18 +477,22 @@ hr {
 </head>
 
 <body>
+
 <div class="ocean">
   <div class="wave one"></div>
   <div class="wave two"></div>
   <div class="wave three"></div>
+  <div class="wave-four"></div>
 </div>
 
 <div class="app">
+
   <aside class="sidebar">
     <div class="logo">Lexi<span>Note</span></div>
     <div class="logo-sub">SMART VOCABULARY LEARNING</div>
 
     <div class="nav-title">HỌC TẬP</div>
+
     <div class="nav-list">
       <button class="nav-btn active" data-page="home">🏠 Trang chủ</button>
       <button class="nav-btn" data-page="dictionary">📖 Từ điển</button>
@@ -493,6 +506,7 @@ hr {
   </aside>
 
   <main class="main">
+
     <header class="topbar">
       <div>
         <h1 id="pageTitle">Trang chủ</h1>
@@ -501,7 +515,7 @@ hr {
       <div class="profile">🌊 English Learning Space</div>
     </header>
 
-    <!-- HOME -->
+    <!-- TRANG CHỦ -->
     <section class="page active" id="home">
       <div class="card">
         <h2>🌊 Welcome to LexiNote!</h2>
@@ -515,11 +529,13 @@ hr {
           <div class="number" id="totalWords">0</div>
           <small>Từ trong từ điển của mày</small>
         </div>
+
         <div class="stat">
           <div>🎯 Đã kiểm tra</div>
           <div class="number" id="totalTests">0</div>
           <small>Lượt trả lời câu hỏi</small>
         </div>
+
         <div class="stat">
           <div>⭐ Trả lời đúng</div>
           <div class="number" id="correctTests">0</div>
@@ -539,29 +555,31 @@ hr {
       </div>
     </section>
 
-    <!-- DICTIONARY -->
+    <!-- TỪ ĐIỂN -->
     <section class="page" id="dictionary">
       <div class="card">
         <h2>📖 Tra từ điển thông minh</h2>
         <p class="muted">Nhập từ tiếng Anh để tự động tìm nghĩa, từ loại, phát âm và từ liên quan.</p>
+
         <div class="row">
           <input class="input" id="lookupInput" placeholder="Nhập từ tiếng Anh...">
           <button class="btn" id="lookupBtn" onclick="lookupWord()">Tra từ</button>
         </div>
+
         <div id="lookupResult" class="result"></div>
       </div>
 
       <div class="card">
         <h2>➕ Thêm từ vào từ điển</h2>
-        <p class="muted">Mày có thể nhập từ và để trống nghĩa, LexiNote sẽ tự tra nghĩa và từ loại.</p>
+        <p class="muted">Có thể để trống nghĩa và từ loại để LexiNote tự nhận diện.</p>
 
         <label>Từ tiếng Anh</label>
         <input class="input" id="newWord" placeholder="Ví dụ: beautiful">
 
-        <label>Nghĩa tiếng Việt (có thể để trống)</label>
-        <input class="input" id="newMeaning" placeholder="Tự động nhận diện nếu để trống">
+        <label>Nghĩa tiếng Việt</label>
+        <input class="input" id="newMeaning" placeholder="Tự động dịch nếu để trống">
 
-        <label>Từ loại (có thể để trống)</label>
+        <label>Từ loại</label>
         <select id="newPos">
           <option value="">Tự động nhận diện</option>
           <option value="noun">Noun (Danh từ)</option>
@@ -578,14 +596,16 @@ hr {
       </div>
     </section>
 
-    <!-- VOCABULARY -->
+    <!-- KHO TỪ VỰNG -->
     <section class="page" id="vocabulary">
       <div class="card">
         <h2>📝 Từ điển cá nhân</h2>
+
         <div class="row">
           <input class="input" id="filterWords" placeholder="Tìm từ trong danh sách..." oninput="renderVocabulary()">
           <button class="btn secondary" onclick="exportWords()">Xuất dữ liệu</button>
         </div>
+
         <div id="vocabularyList"></div>
       </div>
     </section>
@@ -594,7 +614,7 @@ hr {
     <section class="page" id="flashcards">
       <div class="card">
         <h2>🃏 Flashcards</h2>
-        <p class="muted">Ôn tập từ vựng bằng cách ghi nhớ nghĩa trước khi lật thẻ.</p>
+        <p class="muted">Thử nhớ nghĩa trước khi lật thẻ.</p>
 
         <div class="flashcard" onclick="flipCard()">
           <div class="big-word" id="flashWord">Chưa có từ vựng</div>
@@ -611,10 +631,11 @@ hr {
       </div>
     </section>
 
-    <!-- QUIZ -->
+    <!-- KIỂM TRA -->
     <section class="page" id="quiz">
       <div class="card">
         <h2>🎯 Kiểm tra từ vựng</h2>
+
         <label>Chọn dạng bài kiểm tra</label>
         <select id="quizMode">
           <option value="envi">English → Vietnamese</option>
@@ -623,6 +644,7 @@ hr {
           <option value="listen">Nghe và nhập từ</option>
           <option value="fill">Điền từ còn thiếu</option>
         </select>
+
         <button class="btn" onclick="startQuiz()">Bắt đầu kiểm tra</button>
       </div>
 
@@ -650,7 +672,7 @@ hr {
           <p id="listenDescription" class="muted">Nghe đoạn hội thoại và trả lời câu hỏi.</p>
           <button class="btn" onclick="playListening()">▶ Phát bài nghe</button>
           <button class="btn secondary" onclick="stopSpeaking()">Dừng</button>
-          <p class="footer-note">Âm thanh sử dụng giọng đọc tiếng Anh có sẵn trên thiết bị. Chất lượng và giọng đọc tùy thuộc trình duyệt, hệ điều hành.</p>
+          <p class="footer-note">Giọng đọc phụ thuộc vào trình duyệt và thiết bị. LexiNote sẽ ưu tiên giọng Google nếu có khi cần đọc dự phòng.</p>
         </div>
 
         <div id="listenQuestions"></div>
@@ -671,17 +693,18 @@ hr {
         </div>
 
         <button class="btn" onclick="startSpeaking()">🎙️ Bắt đầu nói</button>
-        <button class="btn secondary" onclick="stopSpeaking()">Dừng</button>
+        <button class="btn secondary" onclick="stopRecognition()">Dừng</button>
 
         <div id="speakingResult" class="result"></div>
         <p class="footer-note">Trình duyệt cần hỗ trợ Speech Recognition và có thể cần quyền truy cập microphone.</p>
       </div>
     </section>
 
-    <!-- SETTINGS -->
+    <!-- CÀI ĐẶT -->
     <section class="page" id="settings">
       <div class="card">
         <h2>⚙️ Cài đặt</h2>
+
         <h3>Giọng đọc</h3>
         <label>Chọn giọng tiếng Anh</label>
         <select id="voiceSelect">
@@ -692,8 +715,10 @@ hr {
         <hr>
 
         <h3>Dữ liệu từ vựng</h3>
-        <p class="muted">Dữ liệu được lưu trên trình duyệt hiện tại. Nếu đổi thiết bị hoặc trình duyệt, dữ liệu sẽ không tự đồng bộ.</p>
+        <p class="muted">Dữ liệu được lưu trên trình duyệt hiện tại, không tự đồng bộ giữa các thiết bị.</p>
+
         <button class="btn secondary" onclick="exportWords()">Xuất dữ liệu JSON</button>
+
         <label style="display:block;margin-top:15px">Nhập dữ liệu đã xuất</label>
         <input type="file" id="importFile" accept=".json,application/json" class="input">
         <button class="btn" onclick="importWords()">Nhập dữ liệu</button>
@@ -739,7 +764,9 @@ function normalizeWord(word) {
 }
 
 function findWord(word) {
-  return data.words.find(w => normalizeWord(w.word) === normalizeWord(word));
+  return data.words.find(w =>
+    normalizeWord(w.word) === normalizeWord(word)
+  );
 }
 
 function escapeHTML(value) {
@@ -764,6 +791,7 @@ function posName(pos) {
     interjection: "Thán từ",
     other: "Khác"
   };
+
   return names[pos] || pos || "Chưa xác định";
 }
 
@@ -783,8 +811,13 @@ const pageNames = {
 };
 
 function goPage(page) {
-  document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
-  document.querySelectorAll(".nav-btn").forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(".page").forEach(el =>
+    el.classList.remove("active")
+  );
+
+  document.querySelectorAll(".nav-btn").forEach(el =>
+    el.classList.remove("active")
+  );
 
   document.getElementById(page).classList.add("active");
 
@@ -804,14 +837,19 @@ document.querySelectorAll(".nav-btn").forEach(btn => {
 });
 
 /* =========================
-   API: DICTIONARY + TRANSLATION
+   DICTIONARY API
 ========================= */
 
 async function getDictionaryInfo(word) {
-  const url = "https://api.dictionaryapi.dev/api/v2/entries/en/" + encodeURIComponent(word);
+  const url =
+    "https://api.dictionaryapi.dev/api/v2/entries/en/" +
+    encodeURIComponent(word);
+
   const response = await fetch(url);
 
-  if (!response.ok) throw new Error("Không tìm thấy thông tin từ điển.");
+  if (!response.ok) {
+    throw new Error("Không tìm thấy thông tin từ điển.");
+  }
 
   const result = await response.json();
   const entry = result[0];
@@ -821,28 +859,36 @@ async function getDictionaryInfo(word) {
 
   (entry.meanings || []).forEach(item => {
     if (!pos) pos = item.partOfSpeech || "";
+
     (item.definitions || []).slice(0, 3).forEach(def => {
       definitions.push(def.definition);
     });
   });
 
   const audio = entry.phonetics?.find(p => p.audio)?.audio || "";
-  const phonetic = entry.phonetic || entry.phonetics?.find(p => p.text)?.text || "";
+  const phonetic =
+    entry.phonetic ||
+    entry.phonetics?.find(p => p.text)?.text ||
+    "";
 
-  return {
-    pos,
-    definitions,
-    audio,
-    phonetic
-  };
+  return { pos, definitions, audio, phonetic };
 }
 
+/* =========================
+   TRANSLATION API
+========================= */
+
 async function translateToVietnamese(text) {
-  const url = "https://api.mymemory.translated.net/get?q=" +
-    encodeURIComponent(text) + "&langpair=en|vi";
+  const url =
+    "https://api.mymemory.translated.net/get?q=" +
+    encodeURIComponent(text) +
+    "&langpair=en|vi";
 
   const response = await fetch(url);
-  if (!response.ok) throw new Error("Không thể dịch từ lúc này.");
+
+  if (!response.ok) {
+    throw new Error("Không thể dịch từ lúc này.");
+  }
 
   const result = await response.json();
   const translated = result?.responseData?.translatedText;
@@ -854,11 +900,18 @@ async function translateToVietnamese(text) {
   return translated;
 }
 
+/* =========================
+   RELATED WORDS
+========================= */
+
 async function getRelatedWords(word) {
-  const url = "https://api.datamuse.com/words?ml=" +
-    encodeURIComponent(word) + "&max=8";
+  const url =
+    "https://api.datamuse.com/words?ml=" +
+    encodeURIComponent(word) +
+    "&max=8";
 
   const response = await fetch(url);
+
   if (!response.ok) return [];
 
   const result = await response.json();
@@ -866,7 +919,7 @@ async function getRelatedWords(word) {
 }
 
 /* =========================
-   AUTO SAVE WORD
+   SAVE WORD
 ========================= */
 
 function saveDictionaryWord(word, meaning, pos, extra = {}) {
@@ -880,7 +933,11 @@ function saveDictionaryWord(word, meaning, pos, extra = {}) {
     if (pos) existing.pos = pos;
     if (extra.phonetic) existing.phonetic = extra.phonetic;
     if (extra.audio) existing.audio = extra.audio;
-    if (extra.definitions?.length) existing.definitions = extra.definitions;
+
+    if (extra.definitions?.length) {
+      existing.definitions = extra.definitions;
+    }
+
     existing.updatedAt = Date.now();
   } else {
     data.words.unshift({
@@ -897,6 +954,10 @@ function saveDictionaryWord(word, meaning, pos, extra = {}) {
   saveData();
 }
 
+/* =========================
+   LOOKUP WORD
+========================= */
+
 async function lookupWord() {
   const input = document.getElementById("lookupInput");
   const resultBox = document.getElementById("lookupResult");
@@ -905,13 +966,16 @@ async function lookupWord() {
   const word = normalizeWord(input.value);
 
   if (!word) {
-    resultBox.innerHTML = '<div class="status error">Nhập từ tiếng Anh trước đã.</div>';
+    resultBox.innerHTML =
+      '<div class="status error">Nhập từ tiếng Anh trước đã.</div>';
     return;
   }
 
   button.disabled = true;
   button.textContent = "Đang tra...";
-  resultBox.innerHTML = '<div class="status">Đang tìm nghĩa, từ loại và từ liên quan...</div>';
+
+  resultBox.innerHTML =
+    '<div class="status">Đang tìm nghĩa, từ loại và từ liên quan...</div>';
 
   try {
     const [dictionary, translation, related] = await Promise.all([
@@ -925,22 +989,59 @@ async function lookupWord() {
     resultBox.innerHTML = `
       <div class="word-card">
         <h2>${escapeHTML(word)}</h2>
+
         <span class="tag">${escapeHTML(posName(dictionary.pos))}</span>
-        ${dictionary.phonetic ? `<span class="tag">${escapeHTML(dictionary.phonetic)}</span>` : ""}
-        <p><strong>Nghĩa tiếng Việt:</strong> ${escapeHTML(translation)}</p>
+
+        ${dictionary.phonetic
+          ? `<span class="tag">${escapeHTML(dictionary.phonetic)}</span>`
+          : ""}
+
+        <p>
+          <strong>Nghĩa tiếng Việt:</strong>
+          ${escapeHTML(translation)}
+        </p>
+
         <p><strong>Định nghĩa tiếng Anh:</strong></p>
-        <ul>${dictionary.definitions.map(d => `<li>${escapeHTML(d)}</li>`).join("")}</ul>
-        ${dictionary.audio ? `<button class="btn secondary" onclick="playAudio('${escapeHTML(dictionary.audio)}')">🔊 Nghe phát âm</button>` : ""}
+
+        <ul>
+          ${dictionary.definitions.map(d =>
+            `<li>${escapeHTML(d)}</li>`
+          ).join("")}
+        </ul>
+
+        ${dictionary.audio
+          ? `<button class="btn secondary"
+              onclick="playAudio('${escapeHTML(dictionary.audio)}','${escapeHTML(word)}')">
+              🔊 Nghe phát âm
+            </button>`
+          : `<button class="btn secondary"
+              onclick="speakText('${escapeHTML(word)}')">
+              🔊 Nghe phát âm
+            </button>`
+        }
+
         <hr>
+
         <strong>Từ liên quan:</strong>
-        <div>${related.map(w => `<span class="tag">${escapeHTML(w)}</span>`).join("") || "Chưa có dữ liệu."}</div>
-        <div class="status success">✓ Đã tự động thêm từ này vào từ điển cá nhân.</div>
+
+        <div>
+          ${related.map(w =>
+            `<span class="tag">${escapeHTML(w)}</span>`
+          ).join("") || "Chưa có dữ liệu."}
+        </div>
+
+        <div class="status success">
+          ✓ Đã tự động thêm từ này vào từ điển cá nhân.
+        </div>
       </div>
     `;
+
   } catch (error) {
     resultBox.innerHTML = `
       <div class="status error">${escapeHTML(error.message)}</div>
-      <p class="muted">Kiểm tra kết nối Internet hoặc thử lại với từ khác.</p>
+      <p class="muted">
+        Kiểm tra kết nối Internet hoặc thử lại với từ khác.
+      </p>
     `;
   } finally {
     button.disabled = false;
@@ -968,13 +1069,16 @@ async function addWord() {
   let pos = posInput.value;
 
   if (!word) {
-    status.innerHTML = '<div class="status error">Mày chưa nhập từ tiếng Anh.</div>';
+    status.innerHTML =
+      '<div class="status error">Mày chưa nhập từ tiếng Anh.</div>';
     return;
   }
 
   button.disabled = true;
   button.textContent = "Đang xử lý...";
-  status.innerHTML = '<div class="status">Đang tự động nhận diện thông tin...</div>';
+
+  status.innerHTML =
+    '<div class="status">Đang tự động nhận diện thông tin...</div>';
 
   let dictionary = {
     pos: "",
@@ -994,7 +1098,8 @@ async function addWord() {
       try {
         meaning = await translateToVietnamese(word);
       } catch (e) {
-        status.innerHTML = '<div class="status error">Không tự động dịch được từ này. Mày thử nhập nghĩa thủ công nhé.</div>';
+        status.innerHTML =
+          '<div class="status error">Không tự động dịch được từ này. Mày thử nhập nghĩa thủ công nhé.</div>';
         return;
       }
     }
@@ -1003,12 +1108,15 @@ async function addWord() {
 
     saveDictionaryWord(word, meaning, pos, dictionary);
 
-    status.innerHTML = '<div class="status success">✓ Đã thêm "' +
-      escapeHTML(word) + '" vào từ điển thành công!</div>';
+    status.innerHTML =
+      '<div class="status success">✓ Đã thêm "' +
+      escapeHTML(word) +
+      '" vào từ điển thành công!</div>';
 
     wordInput.value = "";
     meaningInput.value = "";
     posInput.value = "";
+
   } finally {
     button.disabled = false;
     button.textContent = "Thêm vào từ điển";
@@ -1016,12 +1124,14 @@ async function addWord() {
 }
 
 /* =========================
-   VOCABULARY LIST
+   VOCABULARY
 ========================= */
 
 function renderVocabulary() {
   const list = document.getElementById("vocabularyList");
-  const filter = normalizeWord(document.getElementById("filterWords").value);
+  const filter = normalizeWord(
+    document.getElementById("filterWords").value
+  );
 
   const words = data.words.filter(w =>
     normalizeWord(w.word).includes(filter) ||
@@ -1029,20 +1139,38 @@ function renderVocabulary() {
   );
 
   if (!words.length) {
-    list.innerHTML = '<div class="empty">Chưa có từ vựng nào. Hãy tra từ hoặc thêm từ mới nhé!</div>';
+    list.innerHTML =
+      '<div class="empty">Chưa có từ vựng nào. Hãy tra từ hoặc thêm từ mới nhé!</div>';
     return;
   }
 
   list.innerHTML = words.map(w => `
     <div class="word-card">
       <strong>${escapeHTML(w.word)}</strong>
+
       <span class="tag">${escapeHTML(posName(w.pos))}</span>
+
       <p>${escapeHTML(w.meaning || "Chưa có nghĩa")}</p>
-      ${w.phonetic ? `<p class="muted">${escapeHTML(w.phonetic)}</p>` : ""}
+
+      ${w.phonetic
+        ? `<p class="muted">${escapeHTML(w.phonetic)}</p>`
+        : ""}
+
       <div class="word-actions">
-        <button class="btn secondary" onclick="speakText('${escapeHTML(w.word)}')">🔊 Phát âm</button>
-        <button class="btn secondary" onclick="editWord('${escapeHTML(w.word)}')">Sửa</button>
-        <button class="btn danger" onclick="deleteWord('${escapeHTML(w.word)}')">Xóa</button>
+        <button class="btn secondary"
+          onclick="speakText('${escapeHTML(w.word)}')">
+          🔊 Phát âm
+        </button>
+
+        <button class="btn secondary"
+          onclick="editWord('${escapeHTML(w.word)}')">
+          Sửa
+        </button>
+
+        <button class="btn danger"
+          onclick="deleteWord('${escapeHTML(w.word)}')">
+          Xóa
+        </button>
       </div>
     </div>
   `).join("");
@@ -1050,7 +1178,11 @@ function renderVocabulary() {
 
 function deleteWord(word) {
   if (!confirm("Mày có chắc muốn xóa từ này không?")) return;
-  data.words = data.words.filter(w => normalizeWord(w.word) !== normalizeWord(word));
+
+  data.words = data.words.filter(w =>
+    normalizeWord(w.word) !== normalizeWord(word)
+  );
+
   saveData();
   renderVocabulary();
 }
@@ -1063,22 +1195,34 @@ function editWord(word) {
   if (meaning === null) return;
 
   item.meaning = meaning.trim();
+
   saveData();
   renderVocabulary();
 }
 
+/* =========================
+   IMPORT / EXPORT
+========================= */
+
 function exportWords() {
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+  const blob = new Blob(
+    [JSON.stringify(data, null, 2)],
+    { type: "application/json" }
+  );
+
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
+
   a.href = url;
   a.download = "lexinote-data.json";
   a.click();
+
   URL.revokeObjectURL(url);
 }
 
 function importWords() {
   const file = document.getElementById("importFile").files[0];
+
   if (!file) {
     alert("Chọn file JSON trước nhé.");
     return;
@@ -1089,14 +1233,18 @@ function importWords() {
   reader.onload = () => {
     try {
       const imported = JSON.parse(reader.result);
-      if (!Array.isArray(imported.words)) throw new Error("File không hợp lệ.");
+
+      if (!Array.isArray(imported.words)) {
+        throw new Error("File không hợp lệ.");
+      }
 
       imported.words.forEach(item => {
-        if (item.word) {
-          const old = findWord(item.word);
-          if (old) Object.assign(old, item);
-          else data.words.push(item);
-        }
+        if (!item.word) return;
+
+        const old = findWord(item.word);
+
+        if (old) Object.assign(old, item);
+        else data.words.push(item);
       });
 
       data.tests = Number(imported.tests) || data.tests;
@@ -1104,7 +1252,9 @@ function importWords() {
 
       saveData();
       renderVocabulary();
+
       alert("Nhập dữ liệu thành công!");
+
     } catch (e) {
       alert("Không thể đọc file JSON này.");
     }
@@ -1114,10 +1264,15 @@ function importWords() {
 }
 
 function clearAllData() {
-  if (!confirm("Xóa toàn bộ từ vựng và kết quả học tập? Hành động này không thể hoàn tác.")) return;
+  if (!confirm(
+    "Xóa toàn bộ từ vựng và kết quả học tập? Hành động này không thể hoàn tác."
+  )) return;
+
   data = { words: [], tests: 0, correct: 0 };
+
   saveData();
   renderVocabulary();
+
   alert("Đã xóa dữ liệu trên trình duyệt này.");
 }
 
@@ -1133,34 +1288,47 @@ function showFlashcard() {
 
   if (!word) {
     document.getElementById("flashWord").textContent = "Chưa có từ vựng";
-    document.getElementById("flashMeaning").textContent = "Hãy thêm từ vào từ điển.";
+    document.getElementById("flashMeaning").textContent =
+      "Hãy thêm từ vào từ điển.";
     document.getElementById("flashHint").textContent = "";
     return;
   }
 
   document.getElementById("flashWord").textContent = word.word;
+
   document.getElementById("flashMeaning").textContent =
-    flashRevealed ? (word.meaning || "Chưa có nghĩa") : "Hãy thử nhớ nghĩa của từ này...";
+    flashRevealed
+      ? (word.meaning || "Chưa có nghĩa")
+      : "Hãy thử nhớ nghĩa của từ này...";
+
   document.getElementById("flashHint").textContent =
-    flashRevealed ? posName(word.pos) : "Nhấn vào thẻ để lật";
+    flashRevealed
+      ? posName(word.pos)
+      : "Nhấn vào thẻ để lật";
 }
 
 function flipCard() {
   if (!data.words.length) return;
+
   flashRevealed = !flashRevealed;
   showFlashcard();
 }
 
 function nextCard() {
   if (!data.words.length) return;
+
   flashIndex = (flashIndex + 1) % data.words.length;
   flashRevealed = false;
+
   showFlashcard();
 }
 
 function previousCard() {
   if (!data.words.length) return;
-  flashIndex = (flashIndex - 1 + data.words.length) % data.words.length;
+
+  flashIndex =
+    (flashIndex - 1 + data.words.length) % data.words.length;
+
   flashRevealed = false;
   showFlashcard();
 }
@@ -1171,7 +1339,7 @@ function speakFlashWord() {
 }
 
 /* =========================
-   SPEECH SYNTHESIS
+   VOICE SYSTEM
 ========================= */
 
 let availableVoices = [];
@@ -1184,14 +1352,18 @@ function loadVoices() {
   const select = document.getElementById("voiceSelect");
   const current = select.value;
 
-  select.innerHTML = '<option value="">Tự động chọn giọng phù hợp</option>';
+  select.innerHTML =
+    '<option value="">Tự động chọn giọng phù hợp</option>';
 
   availableVoices
     .filter(v => v.lang.toLowerCase().startsWith("en"))
     .forEach((voice, index) => {
       const option = document.createElement("option");
+
       option.value = String(index);
-      option.textContent = voice.name + " (" + voice.lang + ")";
+      option.textContent =
+        voice.name + " (" + voice.lang + ")";
+
       select.appendChild(option);
     });
 
@@ -1203,24 +1375,38 @@ if ("speechSynthesis" in window) {
   speechSynthesis.onvoiceschanged = loadVoices;
 }
 
-function getEnglishVoice() {
+/* Giọng người dùng chọn trong cài đặt */
+function getSelectedVoice() {
   const selected = document.getElementById("voiceSelect")?.value;
 
-  if (selected !== undefined && selected !== "") {
-    const englishVoices = availableVoices.filter(v => v.lang.toLowerCase().startsWith("en"));
-    return englishVoices[Number(selected)] || null;
-  }
+  if (selected === undefined || selected === "") return null;
 
+  const englishVoices = availableVoices.filter(v =>
+    v.lang.toLowerCase().startsWith("en")
+  );
+
+  return englishVoices[Number(selected)] || null;
+}
+
+/* Ưu tiên giọng Google khi cần đọc dự phòng */
+function getGoogleEnglishVoice() {
   return availableVoices.find(v =>
-    v.lang.toLowerCase() === "en-gb" && !/google/i.test(v.name)
-  ) || availableVoices.find(v =>
-    v.lang.toLowerCase().startsWith("en") && !/google/i.test(v.name)
+    v.lang.toLowerCase().startsWith("en") &&
+    /google/i.test(v.name)
+  ) || null;
+}
+
+/* Chọn giọng tiếng Anh thay thế nếu không có Google */
+function getFallbackEnglishVoice() {
+  return availableVoices.find(v =>
+    v.lang.toLowerCase() === "en-gb"
   ) || availableVoices.find(v =>
     v.lang.toLowerCase().startsWith("en")
   ) || null;
 }
 
-function speakText(text) {
+/* Đọc văn bản bằng giọng dự phòng */
+function speakText(text, forceGoogle = false) {
   if (!("speechSynthesis" in window)) {
     alert("Trình duyệt không hỗ trợ đọc văn bản.");
     return;
@@ -1229,23 +1415,74 @@ function speakText(text) {
   speechSynthesis.cancel();
 
   const utterance = new SpeechSynthesisUtterance(text);
+
   utterance.lang = "en-GB";
   utterance.rate = 0.88;
   utterance.pitch = 1;
 
-  const voice = getEnglishVoice();
-  if (voice) utterance.voice = voice;
+  let voice = null;
+
+  if (forceGoogle) {
+    voice = getGoogleEnglishVoice() || getFallbackEnglishVoice();
+  } else {
+    voice =
+      getSelectedVoice() ||
+      getFallbackEnglishVoice() ||
+      getGoogleEnglishVoice();
+  }
+
+  if (voice) {
+    utterance.voice = voice;
+    utterance.lang = voice.lang;
+  }
 
   speechSynthesis.speak(utterance);
 }
 
-function stopSpeaking() {
-  if ("speechSynthesis" in window) speechSynthesis.cancel();
+/* Phát audio từ từ điển, nếu lỗi thì chuyển sang giọng Google */
+function playAudio(url, word = "") {
+  if (!word) {
+    alert("Không tìm thấy từ cần phát âm.");
+    return;
+  }
+
+  if (!url) {
+    speakText(word, true);
+    return;
+  }
+
+  const audioUrl = url.startsWith("//")
+    ? "https:" + url
+    : url;
+
+  const audio = new Audio(audioUrl);
+
+  let fallbackUsed = false;
+
+  function useFallback() {
+    if (fallbackUsed) return;
+
+    fallbackUsed = true;
+    audio.pause();
+
+    speakText(word, true);
+  }
+
+  audio.onerror = useFallback;
+
+  const playPromise = audio.play();
+
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {
+      useFallback();
+    });
+  }
 }
 
-function playAudio(url) {
-  const audio = new Audio(url);
-  audio.play().catch(() => alert("Không phát được âm thanh."));
+function stopSpeaking() {
+  if ("speechSynthesis" in window) {
+    speechSynthesis.cancel();
+  }
 }
 
 /* =========================
@@ -1265,6 +1502,7 @@ function startQuiz() {
   }
 
   quizItems = [...data.words].filter(w => w.meaning);
+
   if (quizItems.length < 2) {
     document.getElementById("quizArea").innerHTML =
       '<div class="status error">Hãy thêm nghĩa cho ít nhất 2 từ trước nhé.</div>';
@@ -1272,9 +1510,11 @@ function startQuiz() {
   }
 
   quizItems.sort(() => Math.random() - 0.5);
+
   quizIndex = 0;
   quizScore = 0;
   quizAnswered = false;
+
   showQuizQuestion();
 }
 
@@ -1284,14 +1524,21 @@ function showQuizQuestion() {
   if (quizIndex >= quizItems.length) {
     area.innerHTML = `
       <h2>🎉 Hoàn thành!</h2>
-      <p>Điểm của mày: <strong>${quizScore}/${quizItems.length}</strong></p>
-      <p>${quizScore === quizItems.length ? "Xuất sắc! Mày nhớ toàn bộ từ rồi." : "Khá tốt! Ôn lại những từ chưa nhớ nhé."}</p>
+      <p>Điểm của mày:
+        <strong>${quizScore}/${quizItems.length}</strong>
+      </p>
+      <p>
+        ${quizScore === quizItems.length
+          ? "Xuất sắc! Mày nhớ toàn bộ từ rồi."
+          : "Khá tốt! Ôn lại những từ chưa nhớ nhé."}
+      </p>
       <button class="btn" onclick="startQuiz()">Làm lại</button>
     `;
     return;
   }
 
   quizAnswered = false;
+
   const item = quizItems[quizIndex];
   const mode = document.getElementById("quizMode").value;
 
@@ -1309,7 +1556,11 @@ function showQuizQuestion() {
     prompt = "Nghe từ và nhập đáp án";
     answer = item.word;
   } else if (mode === "fill") {
-    prompt = "Điền từ: " + item.word[0] + "_".repeat(Math.max(2, item.word.length - 1));
+    prompt =
+      "Điền từ: " +
+      item.word[0] +
+      "_".repeat(Math.max(2, item.word.length - 1));
+
     answer = item.word;
   } else {
     prompt = item.word;
@@ -1321,7 +1572,8 @@ function showQuizQuestion() {
       .slice(0, 3)
       .map(w => w.meaning);
 
-    options = [answer, ...distractors].sort(() => Math.random() - 0.5);
+    options = [answer, ...distractors]
+      .sort(() => Math.random() - 0.5);
   }
 
   let content = `
@@ -1330,17 +1582,35 @@ function showQuizQuestion() {
   `;
 
   if (mode === "listen") {
-    content += `<button class="btn secondary" onclick="speakText('${escapeHTML(item.word)}')">🔊 Nghe lại</button>`;
+    content += `
+      <button class="btn secondary"
+        onclick="speakText('${escapeHTML(item.word)}', true)">
+        🔊 Nghe từ
+      </button>
+    `;
   }
 
   if (mode === "choice") {
-    content += options.map(option =>
-      `<button class="quiz-option" onclick="answerQuiz('${encodeURIComponent(option)}','${encodeURIComponent(answer)}',this)">${escapeHTML(option)}</button>`
-    ).join("");
+    content += options.map(option => `
+      <button class="quiz-option"
+        onclick="answerQuiz(
+          '${encodeURIComponent(option)}',
+          '${encodeURIComponent(answer)}',
+          this
+        )">
+        ${escapeHTML(option)}
+      </button>
+    `).join("");
   } else {
     content += `
-      <input class="input" id="quizAnswer" placeholder="Nhập câu trả lời..." autocomplete="off">
-      <button class="btn" onclick="submitTypedAnswer('${encodeURIComponent(answer)}')">Kiểm tra</button>
+      <input class="input" id="quizAnswer"
+        placeholder="Nhập câu trả lời..."
+        autocomplete="off">
+
+      <button class="btn"
+        onclick="submitTypedAnswer('${encodeURIComponent(answer)}')">
+        Kiểm tra
+      </button>
     `;
   }
 
@@ -1349,35 +1619,46 @@ function showQuizQuestion() {
   area.innerHTML = content;
 
   const input = document.getElementById("quizAnswer");
-  if (input) input.addEventListener("keydown", e => {
-    if (e.key === "Enter") submitTypedAnswer(encodeURIComponent(answer));
-  });
+
+  if (input) {
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        submitTypedAnswer(encodeURIComponent(answer));
+      }
+    });
+  }
 }
 
 function answerQuiz(encodedChoice, encodedAnswer, button) {
   if (quizAnswered) return;
+
   quizAnswered = true;
 
   const choice = decodeURIComponent(encodedChoice);
   const answer = decodeURIComponent(encodedAnswer);
-  const correct = normalizeWord(choice) === normalizeWord(answer);
+
+  const correct =
+    normalizeWord(choice) === normalizeWord(answer);
 
   if (correct) {
     quizScore++;
     data.correct++;
     button.classList.add("correct");
-    showQuizFeedback(true, answer);
   } else {
     button.classList.add("wrong");
-    showQuizFeedback(false, answer);
   }
 
   data.tests++;
   saveData();
 
+  showQuizFeedback(correct, answer);
+
   document.querySelectorAll(".quiz-option").forEach(btn => {
     btn.disabled = true;
-    if (normalizeWord(btn.textContent) === normalizeWord(answer)) {
+
+    if (
+      normalizeWord(btn.textContent) === normalizeWord(answer)
+    ) {
       btn.classList.add("correct");
     }
   });
@@ -1395,7 +1676,9 @@ function submitTypedAnswer(encodedAnswer) {
   if (!userAnswer) return;
 
   quizAnswered = true;
-  const correct = normalizeWord(userAnswer) === normalizeWord(answer);
+
+  const correct =
+    normalizeWord(userAnswer) === normalizeWord(answer);
 
   if (correct) {
     quizScore++;
@@ -1404,6 +1687,7 @@ function submitTypedAnswer(encodedAnswer) {
 
   data.tests++;
   saveData();
+
   input.disabled = true;
 
   showQuizFeedback(correct, answer);
@@ -1414,9 +1698,14 @@ function showQuizFeedback(correct, answer) {
 
   feedback.innerHTML = `
     <div class="status ${correct ? "success" : "error"}">
-      ${correct ? "✓ Chính xác! Làm tốt lắm!" : "Chưa đúng rồi! Đáp án là: " + escapeHTML(answer)}
+      ${correct
+        ? "✓ Chính xác! Làm tốt lắm!"
+        : "Chưa đúng rồi! Đáp án là: " + escapeHTML(answer)}
     </div>
-    <button class="btn" onclick="quizIndex++;showQuizQuestion()">Câu tiếp theo →</button>
+
+    <button class="btn" onclick="quizIndex++;showQuizQuestion()">
+      Câu tiếp theo →
+    </button>
   `;
 }
 
@@ -1468,47 +1757,74 @@ const listeningLessons = [
 ];
 
 function renderListening() {
-  const index = Number(document.getElementById("listeningLevel").value);
+  const index = Number(
+    document.getElementById("listeningLevel").value
+  );
+
   const lesson = listeningLessons[index];
 
-  document.getElementById("listenTitle").textContent = lesson.title;
-  document.getElementById("listenDescription").textContent = lesson.description;
+  document.getElementById("listenTitle").textContent =
+    lesson.title;
+
+  document.getElementById("listenDescription").textContent =
+    lesson.description;
 
   document.getElementById("listenQuestions").innerHTML =
     '<hr><h3>Questions</h3>' +
     lesson.questions.map((q, i) => `
       <div class="word-card">
         <strong>${i + 1}. ${escapeHTML(q[0])}</strong>
-        ${q[1].map((option, j) =>
-          `<button class="quiz-option" onclick="checkListeningAnswer(${i},${j},this)">${escapeHTML(option)}</button>`
-        ).join("")}
+
+        ${q[1].map((option, j) => `
+          <button class="quiz-option"
+            onclick="checkListeningAnswer(${i},${j},this)">
+            ${escapeHTML(option)}
+          </button>
+        `).join("")}
+
         <div id="listenFeedback${i}"></div>
       </div>
     `).join("");
 }
 
-document.getElementById("listeningLevel").addEventListener("change", renderListening);
+document.getElementById("listeningLevel")
+  .addEventListener("change", renderListening);
 
 function playListening() {
-  const lesson = listeningLessons[Number(document.getElementById("listeningLevel").value)];
-  speakText(lesson.text);
+  const lesson = listeningLessons[
+    Number(document.getElementById("listeningLevel").value)
+  ];
+
+  speakText(lesson.text, true);
 }
 
 function checkListeningAnswer(questionIndex, choice, button) {
-  const lesson = listeningLessons[Number(document.getElementById("listeningLevel").value)];
+  const lesson = listeningLessons[
+    Number(document.getElementById("listeningLevel").value)
+  ];
+
   const question = lesson.questions[questionIndex];
   const correct = choice === question[2];
 
   const parent = button.parentElement;
+
   parent.querySelectorAll(".quiz-option").forEach((btn, index) => {
     btn.disabled = true;
-    if (index === question[2]) btn.classList.add("correct");
+
+    if (index === question[2]) {
+      btn.classList.add("correct");
+    }
   });
 
   if (!correct) button.classList.add("wrong");
 
-  document.getElementById("listenFeedback" + questionIndex).innerHTML =
-    `<div class="status ${correct ? "success" : "error"}">${correct ? "Chính xác!" : "Chưa đúng. Hãy nghe lại nhé."}</div>`;
+  document.getElementById(
+    "listenFeedback" + questionIndex
+  ).innerHTML = `
+    <div class="status ${correct ? "success" : "error"}">
+      ${correct ? "Chính xác!" : "Chưa đúng. Hãy nghe lại nhé."}
+    </div>
+  `;
 }
 
 renderListening();
@@ -1529,17 +1845,23 @@ let speakingIndex = 0;
 let recognition = null;
 
 function nextSpeakingPrompt() {
-  speakingIndex = (speakingIndex + 1) % speakingPrompts.length;
-  document.getElementById("speakingPrompt").textContent = speakingPrompts[speakingIndex];
+  speakingIndex =
+    (speakingIndex + 1) % speakingPrompts.length;
+
+  document.getElementById("speakingPrompt").textContent =
+    speakingPrompts[speakingIndex];
+
   document.getElementById("speakingResult").innerHTML = "";
 }
 
 function speakPrompt() {
-  speakText(speakingPrompts[speakingIndex]);
+  speakText(speakingPrompts[speakingIndex], true);
 }
 
 function startSpeaking() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
 
   if (!SpeechRecognition) {
     document.getElementById("speakingResult").innerHTML =
@@ -1548,6 +1870,7 @@ function startSpeaking() {
   }
 
   recognition = new SpeechRecognition();
+
   recognition.lang = "en-GB";
   recognition.interimResults = true;
   recognition.continuous = false;
@@ -1562,23 +1885,37 @@ function startSpeaking() {
       transcript += event.results[i][0].transcript;
     }
 
-    document.getElementById("speakingResult").innerHTML =
-      `<div class="word-card"><strong>Kết quả nhận diện:</strong><p>${escapeHTML(transcript)}</p></div>`;
+    document.getElementById("speakingResult").innerHTML = `
+      <div class="word-card">
+        <strong>Kết quả nhận diện:</strong>
+        <p>${escapeHTML(transcript)}</p>
+      </div>
+    `;
   };
 
   recognition.onerror = event => {
     document.getElementById("speakingResult").innerHTML =
-      '<div class="status error">Không nhận diện được giọng nói: ' + escapeHTML(event.error) + '</div>';
+      '<div class="status error">Không nhận diện được giọng nói: ' +
+      escapeHTML(event.error) +
+      '</div>';
   };
 
   recognition.onend = () => {
     const box = document.getElementById("speakingResult");
+
     if (box.textContent.includes("Đang nghe")) {
-      box.innerHTML = '<div class="status">Đã kết thúc lượt nghe.</div>';
+      box.innerHTML =
+        '<div class="status">Đã kết thúc lượt nghe.</div>';
     }
   };
 
   recognition.start();
+}
+
+function stopRecognition() {
+  if (recognition) {
+    recognition.stop();
+  }
 }
 
 /* =========================
@@ -1586,23 +1923,32 @@ function startSpeaking() {
 ========================= */
 
 function updateDashboard() {
-  document.getElementById("totalWords").textContent = data.words.length;
-  document.getElementById("totalTests").textContent = data.tests;
-  document.getElementById("correctTests").textContent = data.correct;
+  document.getElementById("totalWords").textContent =
+    data.words.length;
+
+  document.getElementById("totalTests").textContent =
+    data.tests;
+
+  document.getElementById("correctTests").textContent =
+    data.correct;
 
   const recent = document.getElementById("recentWords");
   const words = data.words.slice(0, 5);
 
   recent.innerHTML = words.length
     ? words.map(w => `
-      <div class="word-card">
-        <strong>${escapeHTML(w.word)}</strong>
-        <span class="tag">${escapeHTML(posName(w.pos))}</span>
-        <p>${escapeHTML(w.meaning || "Chưa có nghĩa")}</p>
-      </div>
-    `).join("")
+        <div class="word-card">
+          <strong>${escapeHTML(w.word)}</strong>
+          <span class="tag">${escapeHTML(posName(w.pos))}</span>
+          <p>${escapeHTML(w.meaning || "Chưa có nghĩa")}</p>
+        </div>
+      `).join("")
     : '<div class="empty">Chưa có từ nào. Hãy bắt đầu thêm từ vựng nhé!</div>';
 }
+
+/* =========================
+   INITIALIZE
+========================= */
 
 updateDashboard();
 renderVocabulary();
