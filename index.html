@@ -153,9 +153,9 @@ textarea.field{min-height:100px;resize:vertical}
 <label>English word</label>
 <div class="form-grid">
 <input class="field" id="newWord" placeholder="Ví dụ: beautiful" onkeydown="if(event.key==='Enter')autoMeaning()">
-<button class="primary-btn" onclick="autoMeaning()">✨ Tự nhận diện nghĩa</button>
+<button class="primary-btn" id="autoMeaningButton" onclick="autoMeaning()">✨ Tự nhận diện nghĩa</button>
 </div>
-<div class="status-text" id="meaningStatus"></div>
+<div class="status-text" id="meaningStatus" role="status" aria-live="polite"></div>
 <label>Nghĩa tiếng Việt</label>
 <input class="field" id="newMeaning" placeholder="Nghĩa sẽ tự động xuất hiện ở đây">
 <label>Ví dụ (không bắt buộc)</label>
@@ -164,7 +164,7 @@ textarea.field{min-height:100px;resize:vertical}
 <button class="primary-btn" onclick="addWord()">＋ Thêm vào từ điển</button>
 <button class="secondary-btn" onclick="autoMeaning()">Tự dịch nghĩa</button>
 </div>
-<p class="notice">Tính năng nhận diện nghĩa sử dụng dịch máy trực tuyến. Mày có thể chỉnh sửa bản dịch trước khi lưu.</p>
+<p class="notice">Tính năng tự dịch cần kết nối Internet. Mày có thể chỉnh sửa bản dịch trước khi lưu.</p>
 </div>
 <div class="card panel">
 <div class="section-heading"><h3>Danh sách từ vựng</h3><span class="pill" id="wordCount">0 từ</span></div>
@@ -184,7 +184,7 @@ textarea.field{min-height:100px;resize:vertical}
 
 <section class="page" id="page-dictionary">
 <h1 class="page-title">Dictionary</h1><p class="page-subtitle">Tra cứu từ vựng tiếng Anh.</p>
-<div class="card panel"><h3>Tra từ mới</h3><input class="field" id="dictionaryInput" placeholder="Nhập từ tiếng Anh..."><button class="primary-btn" onclick="lookupWord()">Tra cứu →</button><div id="dictionaryResult" class="result hidden"></div></div>
+<div class="card panel"><h3>Tra từ mới</h3><input class="field" id="dictionaryInput" placeholder="Nhập từ tiếng Anh..." onkeydown="if(event.key==='Enter')lookupWord()"><button class="primary-btn" onclick="lookupWord()">Tra cứu →</button><div id="dictionaryResult" class="result hidden"></div></div>
 </section>
 
 <section class="page" id="page-test">
@@ -247,7 +247,7 @@ textarea.field{min-height:100px;resize:vertical}
 <section class="page" id="page-settings">
 <h1 class="page-title">Settings</h1><p class="page-subtitle">Quản lý dữ liệu học tập.</p>
 <div class="card panel"><h3>Dữ liệu từ vựng</h3><p>Xuất dữ liệu để lưu bản sao hoặc nhập dữ liệu từ tệp JSON.</p><div class="actions"><button class="primary-btn" onclick="exportWords()">Xuất dữ liệu</button><button class="secondary-btn" onclick="document.getElementById('importFile').click()">Nhập dữ liệu</button></div></div>
-<div class="card panel"><h3>Thông tin LexiNote</h3><p>Phiên bản 2.2 – Personal English Learning Space.</p><p class="notice">Dữ liệu được lưu trên trình duyệt của thiết bị hiện tại.</p></div>
+<div class="card panel"><h3>Thông tin LexiNote</h3><p>Phiên bản 2.3 – Personal English Learning Space.</p><p class="notice">Dữ liệu được lưu trên trình duyệt của thiết bị hiện tại.</p></div>
 </section>
 </main>
 </div>
@@ -257,50 +257,93 @@ const STORAGE_KEY="lexinote_2_0";
 const CHARACTER_KEY="lexinote_character_image";
 const BACKGROUND_KEY="lexinote_custom_background";
 const PRESET_KEY="lexinote_background_preset";
-let words=[],flashIndex=0,flashFlipped=false,testWords=[],testIndex=0,testScore=0,testCurrent=null,testAnswered=false,recognition=null,pendingBackground=null;
+let words=[],flashIndex=0,flashFlipped=false,testWords=[],testIndex=0,testScore=0,testCurrent=null,testAnswered=false,recognition=null,pendingBackground=null,meaningRequest=0;
+
 const defaultBackground="radial-gradient(ellipse at 15% 10%,rgba(255,255,255,.95),transparent 35%),radial-gradient(ellipse at 85% 20%,rgba(255,255,255,.6),transparent 30%),linear-gradient(145deg,#d8f4f8,#a9dce9 48%,#d7f2f5)";
 const backgroundPresets={ocean:defaultBackground,sky:"linear-gradient(145deg,#e6f5ff,#b8dafa,#d8eaff)",lavender:"linear-gradient(145deg,#f0eaff,#d6d2f5,#e8e2ff)"};
 
 function loadWords(){try{let saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");words=Array.isArray(saved)?saved.map(normalizeWord).filter(w=>w.word):[]}catch(e){words=[]}}
 function normalizeWord(x){if(typeof x==="string")return{word:x,meaning:"",example:""};return{word:String(x.word||x.en||x.english||"").trim(),meaning:String(x.meaning||x.vi||x.vietnamese||"").trim(),example:String(x.example||"").trim()}}
-function saveWords(){localStorage.setItem(STORAGE_KEY,JSON.stringify(words));updateStats()}
+function saveWords(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(words));updateStats()}catch(e){alert("Không thể lưu dữ liệu. Bộ nhớ trình duyệt có thể đã đầy.")}}
 function showPage(name,button){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById("page-"+name)?.classList.add("active");document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));if(button)button.classList.add("active");else{let b=[...document.querySelectorAll(".nav button")].find(x=>x.getAttribute("onclick")?.includes("'"+name+"'"));if(b)b.classList.add("active")}if(name==="flashcards")renderFlash();if(name==="vocabulary")renderVocab();if(name==="background")updateBackgroundPreview()}
 function updateStats(){document.getElementById("statWords").textContent=words.length;document.getElementById("statProgress").textContent=Math.min(100,words.length)+"%";document.getElementById("wordCount").textContent=words.length+" từ"}
 
-/* TỰ ĐỘNG NHẬN DIỆN NGHĨA TIẾNG VIỆT */
+/* TỰ ĐỘNG DỊCH NGHĨA TIẾNG VIỆT */
+function decodeEntities(text){const el=document.createElement("textarea");el.innerHTML=text;return el.value}
+function validTranslation(text,word){
+ if(typeof text!=="string")return false;
+ const clean=decodeEntities(text).trim();
+ if(!clean||clean.toLowerCase()===word.toLowerCase())return false;
+ if(clean.length>500)return false;
+ return true;
+}
 async function autoMeaning(){
  const word=document.getElementById("newWord").value.trim();
  const meaningInput=document.getElementById("newMeaning");
  const status=document.getElementById("meaningStatus");
+ const button=document.getElementById("autoMeaningButton");
+ const requestId=++meaningRequest;
+
  if(!word){status.textContent="Hãy nhập từ tiếng Anh trước.";return}
- status.textContent="⏳ Đang nhận diện nghĩa...";
+ status.textContent="⏳ Đang tìm nghĩa tiếng Việt...";
  meaningInput.value="";
- try{
+ button.disabled=true;
+ button.textContent="Đang dịch...";
+
+ async function tryGoogle(){
+  const url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=vi&dt=t&q="+encodeURIComponent(word);
+  const response=await fetch(url);
+  if(!response.ok)throw new Error("Google Translate unavailable");
+  const data=await response.json();
+  const translated=data?.[0]?.map(part=>part?.[0]||"").join("");
+  if(!validTranslation(translated,word))throw new Error("No valid translation");
+  return decodeEntities(translated);
+ }
+
+ async function tryMyMemory(){
   const url="https://api.mymemory.translated.net/get?q="+encodeURIComponent(word)+"&langpair=en|vi";
   const response=await fetch(url);
-  if(!response.ok)throw new Error("Translation service unavailable");
+  if(!response.ok)throw new Error("MyMemory unavailable");
   const data=await response.json();
   const translated=data?.responseData?.translatedText;
-  const matchQuality=Number(data?.responseData?.match||0);
-  if(!translated||data.responseStatus!==200||matchQuality<30)throw new Error("No reliable translation");
-  meaningInput.value=decodeEntities(translated);
-  status.textContent="✓ Đã nhận diện nghĩa. Mày có thể chỉnh sửa trước khi lưu.";
- }catch(error){
-  status.textContent="Không tự dịch được từ này. Đang thử tra định nghĩa...";
+  if(data?.responseStatus!==200||!validTranslation(translated,word))throw new Error("No valid translation");
+  return decodeEntities(translated);
+ }
+
+ try{
+  let translated;
   try{
-   const r=await fetch("https://api.dictionaryapi.dev/api/v2/entries/en/"+encodeURIComponent(word));
-   if(!r.ok)throw new Error();
-   const d=await r.json();
-   const definition=d[0]?.meanings?.[0]?.definitions?.[0]?.definition;
-   if(!definition)throw new Error();
+   translated=await tryGoogle();
+  }catch(firstError){
+   translated=await tryMyMemory();
+  }
+
+  if(requestId!==meaningRequest)return;
+  meaningInput.value=translated;
+  status.textContent="✓ Đã tự động dịch nghĩa tiếng Việt thành công!";
+ }catch(error){
+  if(requestId!==meaningRequest)return;
+  status.textContent="Đang thử tìm định nghĩa dự phòng...";
+  try{
+   const response=await fetch("https://api.dictionaryapi.dev/api/v2/entries/en/"+encodeURIComponent(word));
+   if(!response.ok)throw new Error("Dictionary unavailable");
+   const data=await response.json();
+   const definition=data?.[0]?.meanings?.[0]?.definitions?.[0]?.definition;
+   if(!definition)throw new Error("No definition");
+   if(requestId!==meaningRequest)return;
    meaningInput.value=definition;
-   status.textContent="Đã tìm thấy định nghĩa tiếng Anh. Chưa có bản dịch tiếng Việt.";
-  }catch(e){
-   status.textContent="Không tìm thấy nghĩa. Kiểm tra chính tả hoặc thử lại sau.";
+   status.textContent="⚠ Chưa dịch được tiếng Việt. Đây là định nghĩa tiếng Anh.";
+  }catch(finalError){
+   if(requestId!==meaningRequest)return;
+   status.textContent="✕ Không tìm thấy nghĩa. Kiểm tra chính tả hoặc thử lại sau.";
+  }
+ }finally{
+  if(requestId===meaningRequest){
+   button.disabled=false;
+   button.textContent="✨ Tự nhận diện nghĩa";
   }
  }
 }
-function decodeEntities(text){const el=document.createElement("textarea");el.innerHTML=text;return el.value}
 
 function addWord(){
  const word=document.getElementById("newWord").value.trim(),meaning=document.getElementById("newMeaning").value.trim(),example=document.getElementById("newExample").value.trim();
@@ -328,7 +371,7 @@ function renderVocab(){
  updateStats();
 }
 function deleteWord(i){if(!confirm("Xóa từ vựng này?"))return;words.splice(i,1);saveWords();renderVocab();renderFlash()}
-function exportWords(){const blob=new Blob([JSON.stringify(words,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="lexinote-vocabulary.json";a.click();URL.revokeObjectURL(url)}
+function exportWords(){const blob=new Blob([JSON.stringify(words,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="lexinote-vocabulary.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function importWords(event){
  const file=event.target.files[0];if(!file)return;
  const reader=new FileReader();reader.onload=()=>{
