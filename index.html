@@ -33,7 +33,6 @@ body {
     radial-gradient(ellipse at 85% 20%,rgba(255,255,255,.6),transparent 30%),
     linear-gradient(145deg,#d8f4f8,#a9dce9 48%,#d7f2f5);
   background-attachment:fixed;
-  background-size:cover;
 }
 
 body:before {
@@ -49,6 +48,7 @@ body:before {
     rgba(255,255,255,.45) 67px,
     transparent 71px
   );
+  z-index:0;
 }
 
 button,input,textarea,select { font:inherit; }
@@ -522,20 +522,6 @@ textarea.field { min-height:100px; resize:vertical; }
 
 .upload-zone p { color:var(--muted); font-size:13px; line-height:1.6; }
 
-.background-preview {
-  width:100%;
-  height:230px;
-  border-radius:18px;
-  border:1px solid white;
-  background:
-    radial-gradient(ellipse at 15% 10%,rgba(255,255,255,.95),transparent 35%),
-    linear-gradient(145deg,#d8f4f8,#a9dce9 48%,#d7f2f5);
-  background-size:cover;
-  background-position:center;
-  margin:12px 0 18px;
-  box-shadow:var(--shadow);
-}
-
 .hidden { display:none !important; }
 
 .notice {
@@ -543,6 +529,68 @@ textarea.field { min-height:100px; resize:vertical; }
   color:var(--muted);
   line-height:1.6;
   margin-top:12px;
+}
+
+/* BACKGROUND SETTINGS */
+.background-preview {
+  width:100%;
+  height:260px;
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.9);
+  background:
+    radial-gradient(ellipse at 15% 10%,rgba(255,255,255,.95),transparent 35%),
+    radial-gradient(ellipse at 85% 20%,rgba(255,255,255,.6),transparent 30%),
+    linear-gradient(145deg,#d8f4f8,#a9dce9 48%,#d7f2f5);
+  background-position:center;
+  background-size:cover;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#367d9b;
+  font-weight:900;
+  text-align:center;
+  padding:20px;
+  margin:12px 0 18px;
+}
+
+.background-preview span {
+  padding:10px 16px;
+  border-radius:12px;
+  background:rgba(255,255,255,.65);
+  backdrop-filter:blur(8px);
+}
+
+.background-options {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:15px;
+}
+
+.background-option {
+  height:85px;
+  border:2px solid rgba(255,255,255,.9);
+  border-radius:14px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.background-option:hover {
+  transform:translateY(-3px);
+  border-color:#3e9ec1;
+}
+
+.bg-ocean {
+  background:linear-gradient(145deg,#d8f4f8,#a9dce9,#d7f2f5);
+}
+
+.bg-sky {
+  background:linear-gradient(145deg,#e6f5ff,#b8dafa,#d8eaff);
+}
+
+.bg-lavender {
+  background:linear-gradient(145deg,#f0eaff,#d6d2f5,#e8e2ff);
 }
 
 @media(max-width:900px) {
@@ -578,6 +626,7 @@ textarea.field { min-height:100px; resize:vertical; }
   .feature { padding:14px; }
   .character-layout { grid-template-columns:1fr; }
   .form-grid { grid-template-columns:1fr; }
+  .background-options { grid-template-columns:repeat(3,1fr); }
 }
 
 @media(max-width:390px) {
@@ -662,7 +711,7 @@ textarea.field { min-height:100px; resize:vertical; }
       <div class="card feature" onclick="showPage('reading')"><div class="feature-icon">▧</div><h3>Reading</h3><p>Đọc đoạn văn và trả lời câu hỏi.</p></div>
       <div class="card feature" onclick="showPage('grammar')"><div class="feature-icon">文</div><h3>Grammar</h3><p>Ôn tập kiến thức ngữ pháp.</p></div>
       <div class="card feature" onclick="showPage('character')"><div class="feature-icon">✧</div><h3>My Character</h3><p>Thêm nhân vật yêu thích của mày.</p></div>
-      <div class="card feature" onclick="showPage('background')"><div class="feature-icon">🌊</div><h3>Background</h3><p>Tùy chỉnh hình nền đại dương.</p></div>
+      <div class="card feature" onclick="showPage('background')"><div class="feature-icon">🌊</div><h3>Background</h3><p>Tùy chỉnh hình nền không gian học tập.</p></div>
     </div>
   </section>
 
@@ -872,30 +921,55 @@ textarea.field { min-height:100px; resize:vertical; }
             <button class="danger-btn" onclick="removeCharacter()">Xóa ảnh</button>
           </div>
         </div>
-        <p class="notice">Ảnh được lưu trên trình duyệt của thiết bị này. Nếu xóa dữ liệu trang web, ảnh có thể bị mất.</p>
+        <p class="notice">Ảnh được lưu bằng bộ nhớ trình duyệt (localStorage). Nếu xóa dữ liệu trang web, ảnh đã lưu có thể bị mất.</p>
       </div>
     </div>
   </section>
 
-  <!-- BACKGROUND -->
+  <!-- BACKGROUND SETTINGS -->
   <section class="page" id="page-background">
     <h1 class="page-title">Background Settings 🌊</h1>
-    <p class="page-subtitle">Tùy chỉnh không gian đại dương của LexiNote.</p>
+    <p class="page-subtitle">Tùy chỉnh hình nền cho không gian học tập LexiNote.</p>
 
     <div class="card panel">
-      <h3>Hình nền hiện tại</h3>
-      <div class="background-preview" id="backgroundPreview"></div>
-      <div class="upload-zone">
-        <div style="font-size:32px">🌊</div>
-        <strong>Chọn hình nền mới</strong>
-        <p>Chọn ảnh PNG, JPG hoặc WEBP từ thiết bị. Ảnh sẽ được áp dụng cho toàn bộ trang web.</p>
-        <input type="file" id="backgroundFile" accept="image/png,image/jpeg,image/webp" class="field">
-        <div class="actions">
-          <button class="primary-btn" onclick="applyBackground()">Áp dụng hình nền</button>
-          <button class="danger-btn" onclick="resetBackground()">Khôi phục nền mặc định</button>
-        </div>
+      <h3>✧ Xem trước hình nền</h3>
+      <p>Hình nền hiện tại của mày sẽ được hiển thị tại đây.</p>
+
+      <div class="background-preview" id="backgroundPreview">
+        <span id="backgroundPreviewText">🌊 Ocean background</span>
       </div>
-      <p class="notice">Hình nền được lưu trên trình duyệt của thiết bị này. Nên chọn ảnh có dung lượng dưới 1,5MB để tránh đầy bộ nhớ.</p>
+
+      <h3>＋ Tải hình nền từ thiết bị</h3>
+      <p>Chọn ảnh PNG, JPG hoặc WEBP để thay đổi hình nền.</p>
+
+      <input
+        type="file"
+        class="field"
+        id="backgroundFile"
+        accept="image/png,image/jpeg,image/webp"
+        onchange="previewBackground(event)"
+      >
+
+      <div class="actions">
+        <button class="primary-btn" onclick="applyBackground()">Áp dụng hình nền</button>
+        <button class="secondary-btn" onclick="clearBackgroundSelection()">Hủy ảnh đã chọn</button>
+        <button class="danger-btn" onclick="resetBackground()">Khôi phục nền mặc định</button>
+      </div>
+
+      <p class="notice">
+        Hình nền được lưu trên trình duyệt của thiết bị này. Ảnh nên có dung lượng dưới 2MB để tránh lỗi bộ nhớ.
+      </p>
+    </div>
+
+    <div class="card panel">
+      <h3>🎨 Chọn màu nền có sẵn</h3>
+      <p>Không cần tải ảnh, mày cũng có thể chọn một trong các màu nền dưới đây.</p>
+
+      <div class="background-options">
+        <button class="background-option bg-ocean" title="Ocean Blue" onclick="setPresetBackground('ocean')"></button>
+        <button class="background-option bg-sky" title="Sky Blue" onclick="setPresetBackground('sky')"></button>
+        <button class="background-option bg-lavender" title="Lavender" onclick="setPresetBackground('lavender')"></button>
+      </div>
     </div>
   </section>
 
@@ -924,6 +998,7 @@ textarea.field { min-height:100px; resize:vertical; }
 const STORAGE_KEY = "lexinote_2_0";
 const CHARACTER_KEY = "lexinote_character_image";
 const BACKGROUND_KEY = "lexinote_custom_background";
+const PRESET_KEY = "lexinote_background_preset";
 
 let words = [];
 let flashIndex = 0;
@@ -935,6 +1010,19 @@ let testCurrent = null;
 let testAnswered = false;
 let listeningVisible = true;
 let recognition = null;
+let pendingBackground = null;
+
+const defaultBackground = `
+radial-gradient(ellipse at 15% 10%,rgba(255,255,255,.95),transparent 35%),
+radial-gradient(ellipse at 85% 20%,rgba(255,255,255,.6),transparent 30%),
+linear-gradient(145deg,#d8f4f8,#a9dce9 48%,#d7f2f5)
+`;
+
+const backgroundPresets = {
+  ocean: defaultBackground,
+  sky: "linear-gradient(145deg,#e6f5ff,#b8dafa,#d8eaff)",
+  lavender: "linear-gradient(145deg,#f0eaff,#d6d2f5,#e8e2ff)"
+};
 
 function loadWords() {
   try {
@@ -966,20 +1054,20 @@ function showPage(name,button) {
 
   if(button) button.classList.add("active");
   else {
-    const navButton = [...document.querySelectorAll(".nav button")]
-      .find(b => b.getAttribute("onclick")?.includes("'" + name + "'"));
+    const navButton = [...document.querySelectorAll(".nav button")].find(b =>
+      b.getAttribute("onclick")?.includes("'" + name + "'")
+    );
     if(navButton) navButton.classList.add("active");
   }
 
   if(name === "flashcards") renderFlash();
   if(name === "vocabulary") renderVocab();
-  if(name === "background") renderBackgroundPreview();
+  if(name === "background") updateBackgroundPreview();
 }
 
 function updateStats() {
   document.getElementById("statWords").textContent = words.length;
-  document.getElementById("statProgress").textContent =
-    Math.min(100,Math.round(words.length)) + "%";
+  document.getElementById("statProgress").textContent = Math.min(100,Math.round(words.length)) + "%";
   document.getElementById("wordCount").textContent = words.length + " từ";
 }
 
@@ -988,19 +1076,14 @@ function addWord() {
   const meaning = document.getElementById("newMeaning").value.trim();
   const example = document.getElementById("newExample").value.trim();
 
-  if(!word || !meaning)
-    return alert("Hãy nhập cả từ tiếng Anh và nghĩa tiếng Việt.");
-
-  if(words.some(w => w.word.toLowerCase() === word.toLowerCase()))
-    return alert("Từ này đã có trong danh sách.");
+  if(!word || !meaning) return alert("Hãy nhập cả từ tiếng Anh và nghĩa tiếng Việt.");
+  if(words.some(w => w.word.toLowerCase() === word.toLowerCase())) return alert("Từ này đã có trong danh sách.");
 
   words.push({word,meaning,example});
   saveWords();
   renderVocab();
 
-  ["newWord","newMeaning","newExample"].forEach(id => {
-    document.getElementById(id).value = "";
-  });
+  ["newWord","newMeaning","newExample"].forEach(id => document.getElementById(id).value = "");
 }
 
 function renderVocab() {
@@ -1008,8 +1091,9 @@ function renderVocab() {
   if(!list) return;
 
   const query = (document.getElementById("searchWords")?.value || "").toLowerCase();
-  const filtered = words.map((w,i)=>({...w,index:i}))
-    .filter(w => (w.word+" "+w.meaning).toLowerCase().includes(query));
+  const filtered = words.map((w,i)=>({...w,index:i})).filter(w =>
+    (w.word+" "+w.meaning).toLowerCase().includes(query)
+  );
 
   list.innerHTML = "";
 
@@ -1084,11 +1168,10 @@ function importWords(event) {
       const map = new Map(words.map(w => [w.word.toLowerCase(),w]));
 
       cleaned.forEach(w => map.set(w.word.toLowerCase(),w));
-
       words = [...map.values()];
+
       saveWords();
       renderVocab();
-
       alert("Đã nhập dữ liệu thành công!");
     } catch(e) {
       alert("Tệp dữ liệu không hợp lệ.");
@@ -1109,7 +1192,6 @@ function renderFlash() {
   }
 
   flashIndex = (flashIndex + words.length) % words.length;
-
   const w = words[flashIndex];
 
   document.getElementById("flashWord").textContent = w.word;
@@ -1118,32 +1200,15 @@ function renderFlash() {
   document.getElementById("flashCount").textContent = (flashIndex+1) + " / " + words.length;
 }
 
-function flipFlash() {
-  flashFlipped = !flashFlipped;
-  renderFlash();
-}
-
-function nextFlash() {
-  flashIndex++;
-  flashFlipped=false;
-  renderFlash();
-}
-
-function previousFlash() {
-  flashIndex--;
-  flashFlipped=false;
-  renderFlash();
-}
-
+function flipFlash() { flashFlipped = !flashFlipped; renderFlash(); }
+function nextFlash() { flashIndex++; flashFlipped=false; renderFlash(); }
+function previousFlash() { flashIndex--; flashFlipped=false; renderFlash(); }
 function shuffleFlash() {
   flashIndex=Math.floor(Math.random()*Math.max(1,words.length));
   flashFlipped=false;
   renderFlash();
 }
-
-function currentFlashWord() {
-  return words[flashIndex]?.word || "";
-}
+function currentFlashWord() { return words[flashIndex]?.word || ""; }
 
 function speak(text) {
   if(!text || !("speechSynthesis" in window))
@@ -1159,7 +1224,6 @@ function speak(text) {
   const englishVoice = voices.find(v => v.lang.toLowerCase().startsWith("en"));
 
   if(englishVoice) utterance.voice = englishVoice;
-
   speechSynthesis.speak(utterance);
 }
 
@@ -1170,7 +1234,6 @@ function stopSpeaking() {
 async function lookupWord() {
   const word = document.getElementById("dictionaryInput").value.trim();
   const result = document.getElementById("dictionaryResult");
-
   if(!word) return;
 
   result.classList.remove("hidden");
@@ -1185,14 +1248,8 @@ async function lookupWord() {
 
     const data = await response.json();
     const entry = data[0];
-
-    const phonetic = entry.phonetic ||
-      entry.phonetics?.find(p=>p.text)?.text ||
-      "Chưa có phiên âm";
-
-    const meaning = entry.meanings?.[0]?.definitions?.[0]?.definition ||
-      "Chưa có định nghĩa.";
-
+    const phonetic = entry.phonetic || entry.phonetics?.find(p=>p.text)?.text || "Chưa có phiên âm";
+    const meaning = entry.meanings?.[0]?.definitions?.[0]?.definition || "Chưa có định nghĩa.";
     const audio = entry.phonetics?.find(p=>p.audio)?.audio;
 
     result.innerHTML = "";
@@ -1227,15 +1284,13 @@ async function lookupWord() {
 }
 
 function startTest() {
-  if(words.length < 2)
-    return alert("Hãy thêm ít nhất 2 từ vựng để bắt đầu kiểm tra.");
+  if(words.length < 2) return alert("Hãy thêm ít nhất 2 từ vựng để bắt đầu kiểm tra.");
 
   testWords = [...words].sort(()=>Math.random()-.5);
   testIndex = 0;
   testScore = 0;
 
   document.getElementById("testArea").classList.remove("hidden");
-
   showTestQuestion();
 }
 
@@ -1246,8 +1301,7 @@ function showTestQuestion() {
     document.getElementById("testInput").classList.add("hidden");
     document.getElementById("submitTyped").classList.add("hidden");
     document.getElementById("testResult").classList.remove("hidden");
-    document.getElementById("testResult").textContent =
-      "Kết quả: "+testScore+"/"+testWords.length+" câu đúng.";
+    document.getElementById("testResult").textContent = "Kết quả: "+testScore+"/"+testWords.length+" câu đúng.";
     document.getElementById("nextQuestion").classList.add("hidden");
     document.getElementById("testProgress").style.width = "100%";
     return;
@@ -1258,23 +1312,16 @@ function showTestQuestion() {
 
   const mode = document.getElementById("testMode").value;
 
-  document.getElementById("testCounter").textContent =
-    "Câu "+(testIndex+1)+" / "+testWords.length;
-
-  document.getElementById("testProgress").style.width =
-    (testIndex/testWords.length*100)+"%";
-
+  document.getElementById("testCounter").textContent = "Câu "+(testIndex+1)+" / "+testWords.length;
+  document.getElementById("testProgress").style.width = (testIndex/testWords.length*100)+"%";
   document.getElementById("testResult").classList.add("hidden");
   document.getElementById("nextQuestion").classList.add("hidden");
   document.getElementById("testChoices").innerHTML = "";
   document.getElementById("testInput").classList.add("hidden");
   document.getElementById("submitTyped").classList.add("hidden");
 
-  if(mode === "en")
-    document.getElementById("testQuestion").textContent = testCurrent.word;
-
-  if(mode === "vi")
-    document.getElementById("testQuestion").textContent = testCurrent.meaning;
+  if(mode === "en") document.getElementById("testQuestion").textContent = testCurrent.word;
+  if(mode === "vi") document.getElementById("testQuestion").textContent = testCurrent.meaning;
 
   if(mode === "listen") {
     document.getElementById("testQuestion").textContent = "Nghe từ và chọn đáp án.";
@@ -1290,13 +1337,8 @@ function showTestQuestion() {
   }
 
   const correct = mode === "en" ? testCurrent.meaning : testCurrent.word;
-
-  const pool = words
-    .filter(w=>w.word!==testCurrent.word)
-    .map(w=>mode==="en"?w.meaning:w.word);
-
-  const choices = [correct,...pool.sort(()=>Math.random()-.5).slice(0,3)]
-    .sort(()=>Math.random()-.5);
+  const pool = words.filter(w=>w.word!==testCurrent.word).map(w=>mode==="en"?w.meaning:w.word);
+  const choices = [correct,...pool.sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);
 
   choices.forEach(choice => {
     const btn = document.createElement("button");
@@ -1311,15 +1353,12 @@ function answerTest(answer,correct) {
   if(testAnswered) return;
 
   testAnswered = true;
-
   const ok = answer.toLowerCase() === correct.toLowerCase();
 
   if(ok) testScore++;
 
   document.getElementById("testResult").classList.remove("hidden");
-  document.getElementById("testResult").textContent =
-    ok ? "✓ Chính xác!" : "✗ Đáp án đúng: "+correct;
-
+  document.getElementById("testResult").textContent = ok ? "✓ Chính xác!" : "✗ Đáp án đúng: "+correct;
   document.getElementById("nextQuestion").classList.remove("hidden");
 }
 
@@ -1327,7 +1366,6 @@ function checkTyped() {
   if(testAnswered) return;
 
   const answer = document.getElementById("testInput").value.trim().toLowerCase();
-
   if(!answer) return;
 
   answerTest(answer,testCurrent.word.toLowerCase());
@@ -1358,7 +1396,6 @@ function startListening() {
 
 function showListenText() {
   const el = document.getElementById("listenText");
-
   listeningVisible = !listeningVisible;
   el.style.visibility = listeningVisible ? "visible" : "hidden";
 }
@@ -1379,8 +1416,7 @@ function newSpeakingPrompt() {
 }
 
 function startSpeaking() {
-  const SpeechRecognition =
-    window.SpeechRecognition || window.webkitSpeechRecognition;
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
   if(!SpeechRecognition)
     return alert("Trình duyệt này chưa hỗ trợ nhận diện giọng nói. Hãy thử Chrome hoặc Edge.");
@@ -1393,8 +1429,7 @@ function startSpeaking() {
   document.getElementById("speakingResult").textContent = "Đang nghe...";
 
   recognition.onresult = event => {
-    document.getElementById("speakingResult").textContent =
-      event.results[0][0].transcript;
+    document.getElementById("speakingResult").textContent = event.results[0][0].transcript;
   };
 
   recognition.onerror = () => {
@@ -1402,19 +1437,12 @@ function startSpeaking() {
       "Không nhận diện được giọng nói. Hãy kiểm tra quyền micro.";
   };
 
-  try {
-    recognition.start();
-  } catch(e) {
-    document.getElementById("speakingResult").textContent =
-      "Micro đang được sử dụng hoặc phiên nhận diện trước chưa kết thúc.";
-  }
+  recognition.start();
 }
 
 function readingAnswer(button,correct) {
   const result = document.getElementById("readingResult");
-
   result.classList.remove("hidden");
-
   result.textContent = correct
     ? "✓ Chính xác! Anna went to the beach."
     : "✗ Chưa đúng. Hãy đọc lại đoạn văn nhé.";
@@ -1422,16 +1450,13 @@ function readingAnswer(button,correct) {
 
 function grammarAnswer(button,correct) {
   const result = document.getElementById("grammarResult");
-
   result.classList.remove("hidden");
-
   result.textContent = correct
     ? "✓ Chính xác! Với chủ ngữ She, động từ thêm -s/-es."
     : "✗ Chưa đúng. Đáp án là goes.";
 }
 
 /* CHARACTER UPLOAD */
-
 function uploadCharacter() {
   const file = document.getElementById("characterFile").files[0];
 
@@ -1476,8 +1501,7 @@ function displayCharacter(src) {
 }
 
 function removeCharacter() {
-  if(!confirm("Mày có chắc muốn xóa nhân vật hiện tại không?"))
-    return;
+  if(!confirm("Mày có chắc muốn xóa nhân vật hiện tại không?")) return;
 
   localStorage.removeItem(CHARACTER_KEY);
 
@@ -1494,100 +1518,156 @@ function removeCharacter() {
 }
 
 function loadCharacter() {
-  try {
-    const saved = localStorage.getItem(CHARACTER_KEY);
-    if(saved) displayCharacter(saved);
-  } catch(e) {
-    console.warn("Không thể tải nhân vật đã lưu.",e);
-  }
+  const saved = localStorage.getItem(CHARACTER_KEY);
+  if(saved) displayCharacter(saved);
 }
 
-/* BACKGROUND UPLOAD */
-
-function applyBackground() {
-  const file = document.getElementById("backgroundFile").files[0];
-
-  if(!file)
-    return alert("Mày chưa chọn hình nền.");
+/* BACKGROUND SETTINGS */
+function previewBackground(event) {
+  const file = event.target.files[0];
+  if(!file) return;
 
   const allowed = ["image/png","image/jpeg","image/webp"];
 
-  if(!allowed.includes(file.type))
-    return alert("Chỉ hỗ trợ ảnh PNG, JPG hoặc WEBP.");
+  if(!allowed.includes(file.type)) {
+    alert("Chỉ hỗ trợ ảnh PNG, JPG hoặc WEBP.");
+    event.target.value = "";
+    return;
+  }
 
-  if(file.size > 1.5 * 1024 * 1024)
-    return alert("Ảnh nền quá lớn. Hãy chọn ảnh dưới 1,5MB.");
+  if(file.size > 2 * 1024 * 1024) {
+    alert("Ảnh nền quá lớn. Hãy chọn ảnh dưới 2MB.");
+    event.target.value = "";
+    return;
+  }
 
   const reader = new FileReader();
 
   reader.onload = () => {
-    try {
-      localStorage.setItem(BACKGROUND_KEY,reader.result);
-      setBackground(reader.result);
-      renderBackgroundPreview();
+    pendingBackground = reader.result;
 
-      document.getElementById("backgroundFile").value = "";
+    const preview = document.getElementById("backgroundPreview");
+    preview.style.backgroundImage =
+      `linear-gradient(rgba(255,255,255,.12),rgba(255,255,255,.12)),url("${pendingBackground}")`;
 
-      alert("Đã thay đổi hình nền thành công!");
-    } catch(e) {
-      alert("Không thể lưu ảnh nền. Hãy thử ảnh có dung lượng nhỏ hơn.");
-    }
+    preview.style.backgroundSize = "cover";
+    preview.style.backgroundPosition = "center";
+
+    document.getElementById("backgroundPreviewText").textContent = "Ảnh đã chọn — nhấn Áp dụng để lưu";
   };
 
   reader.readAsDataURL(file);
 }
 
-function setBackground(image) {
+function applyBackground() {
+  if(!pendingBackground) {
+    return alert("Mày hãy chọn một hình ảnh trước.");
+  }
+
+  try {
+    localStorage.setItem(BACKGROUND_KEY,pendingBackground);
+    localStorage.removeItem(PRESET_KEY);
+
+    setCustomBackground(pendingBackground);
+
+    pendingBackground = null;
+    document.getElementById("backgroundFile").value = "";
+
+    updateBackgroundPreview();
+
+    alert("Đã thay đổi hình nền thành công!");
+  } catch(e) {
+    alert("Không thể lưu ảnh nền. Hãy chọn ảnh nhỏ hơn 2MB.");
+  }
+}
+
+function setCustomBackground(image) {
   document.body.style.background =
-    `linear-gradient(rgba(220,245,250,.22),rgba(220,245,250,.22)),url("${image}") center/cover fixed no-repeat`;
+    `linear-gradient(rgba(225,247,250,.20),rgba(225,247,250,.20)),url("${image}") center/cover fixed no-repeat`;
+}
+
+function setPresetBackground(name) {
+  if(!backgroundPresets[name]) return;
+
+  try {
+    localStorage.removeItem(BACKGROUND_KEY);
+    localStorage.setItem(PRESET_KEY,name);
+
+    document.body.style.background = backgroundPresets[name];
+    document.body.style.backgroundAttachment = "fixed";
+
+    pendingBackground = null;
+    document.getElementById("backgroundFile").value = "";
+
+    updateBackgroundPreview();
+
+    alert("Đã đổi màu nền!");
+  } catch(e) {
+    alert("Không thể thay đổi hình nền.");
+  }
 }
 
 function resetBackground() {
-  if(!confirm("Khôi phục hình nền đại dương mặc định?"))
-    return;
+  if(!confirm("Khôi phục hình nền đại dương mặc định?")) return;
 
   localStorage.removeItem(BACKGROUND_KEY);
+  localStorage.removeItem(PRESET_KEY);
 
-  document.body.style.removeProperty("background");
-  document.body.style.removeProperty("background-attachment");
-  document.body.style.removeProperty("background-size");
+  document.body.style.background = "";
+  document.body.style.backgroundAttachment = "fixed";
 
+  pendingBackground = null;
   document.getElementById("backgroundFile").value = "";
 
-  renderBackgroundPreview();
+  updateBackgroundPreview();
 
   alert("Đã khôi phục hình nền mặc định!");
 }
 
-function renderBackgroundPreview() {
+function clearBackgroundSelection() {
+  pendingBackground = null;
+  document.getElementById("backgroundFile").value = "";
+  updateBackgroundPreview();
+}
+
+function updateBackgroundPreview() {
   const preview = document.getElementById("backgroundPreview");
+  const label = document.getElementById("backgroundPreviewText");
 
-  if(!preview) return;
+  const savedImage = localStorage.getItem(BACKGROUND_KEY);
+  const savedPreset = localStorage.getItem(PRESET_KEY);
 
-  const saved = localStorage.getItem(BACKGROUND_KEY);
-
-  if(saved) {
+  if(savedImage) {
     preview.style.backgroundImage =
-      `linear-gradient(rgba(220,245,250,.15),rgba(220,245,250,.15)),url("${saved}")`;
+      `linear-gradient(rgba(255,255,255,.12),rgba(255,255,255,.12)),url("${savedImage}")`;
+
+    preview.style.backgroundSize = "cover";
+    preview.style.backgroundPosition = "center";
+    label.textContent = "Hình nền tùy chỉnh đang được sử dụng";
+  } else if(savedPreset && backgroundPresets[savedPreset]) {
+    preview.style.backgroundImage = backgroundPresets[savedPreset];
+    label.textContent = "Màu nền đang sử dụng";
   } else {
-    preview.style.backgroundImage =
-      "radial-gradient(ellipse at 15% 10%,rgba(255,255,255,.95),transparent 35%),linear-gradient(145deg,#d8f4f8,#a9dce9 48%,#d7f2f5)";
+    preview.style.backgroundImage = defaultBackground;
+    label.textContent = "🌊 Ocean background mặc định";
   }
 }
 
 function loadSavedBackground() {
-  try {
-    const saved = localStorage.getItem(BACKGROUND_KEY);
-    if(saved) setBackground(saved);
-  } catch(e) {
-    console.warn("Không thể tải hình nền đã lưu.",e);
+  const savedImage = localStorage.getItem(BACKGROUND_KEY);
+  const savedPreset = localStorage.getItem(PRESET_KEY);
+
+  if(savedImage) {
+    setCustomBackground(savedImage);
+  } else if(savedPreset && backgroundPresets[savedPreset]) {
+    document.body.style.background = backgroundPresets[savedPreset];
+    document.body.style.backgroundAttachment = "fixed";
   }
 
-  renderBackgroundPreview();
+  updateBackgroundPreview();
 }
 
-/* GREETING */
-
+/* INITIALIZE */
 function setGreeting() {
   const hour = new Date().getHours();
 
@@ -1596,8 +1676,6 @@ function setGreeting() {
     hour < 18 ? "Good afternoon!" :
     "Good evening!";
 }
-
-/* INITIALIZE */
 
 loadWords();
 setGreeting();
